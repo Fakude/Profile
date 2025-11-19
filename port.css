@@ -59,7 +59,7 @@ h1, h2, h3 {
 /* ------------------------------ */
 .hero-section {
     height: 100vh;
-    background-image: url("ChatGPT Image Nov 18, 2025, 01_49_13 AM.png");
+    background-image: url("Nov 18, 2025, 01_49_13 AM.png");
     background-size: cover;       /* Makes the image cover the whole section */
     background-position: center;  /* Centers the image */
     background-repeat: no-repeat; /* Prevents the image from repeating */
@@ -327,3 +327,4 @@ h1, h2, h3 {
         height: 180px;
     }
 }
+
