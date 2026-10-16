@@ -93,10 +93,10 @@ body{background:radial-gradient(ellipse at 85% 8%,#151a241f,transparent 38%),#03
 const root=document.documentElement, body=document.body;
 const media=window.matchMedia('(prefers-reduced-motion: reduce)');
 const fine=window.matchMedia('(hover: hover) and (pointer: fine)');
-let savedMotion=null;try{savedMotion=localStorage.getItem('nf-motion')}catch(e){}
-let paused=savedMotion===null?media.matches:savedMotion==='off', frame=0, pointer={x:innerWidth/2,y:innerHeight/2};
+let paused=media.matches, frame=0, pointer={x:innerWidth/2,y:innerHeight/2};
 const identity=document.querySelector('[data-tilt]');
 const toggle=document.querySelector('.motion-button');
+if(toggle)toggle.remove();
 function render(){
 frame=0;if(paused||!fine.matches)return;
 root.style.setProperty('--mx',pointer.x+'px');root.style.setProperty('--my',pointer.y+'px');
@@ -108,9 +108,8 @@ identity.style.transform='rotateX('+(-y*7)+'deg) rotateY('+(x*10)+'deg)';
 window.addEventListener('pointermove',e=>{pointer={x:e.clientX,y:e.clientY};if(!frame&&!paused)frame=requestAnimationFrame(render)},{passive:true});
 document.addEventListener('mouseleave',()=>{identity.style.transform='none'});
 document.querySelectorAll('.project').forEach(card=>card.addEventListener('pointermove',e=>{if(paused||!fine.matches)return;const r=card.getBoundingClientRect();card.style.setProperty('--px',(e.clientX-r.left)+'px');card.style.setProperty('--py',(e.clientY-r.top)+'px')},{passive:true}));
-function applyMotion(){body.classList.toggle('motion-off',paused);body.classList.toggle('motion-on',!paused);toggle.textContent=paused?'Enable motion':'Pause motion';toggle.setAttribute('aria-pressed',String(paused));if(paused){identity.style.transform='none';if(frame)cancelAnimationFrame(frame);frame=0}}
-toggle.addEventListener('click',()=>{paused=!paused;try{localStorage.setItem('nf-motion',paused?'off':'on')}catch(e){}applyMotion()});
-media.addEventListener('change',e=>{let saved=null;try{saved=localStorage.getItem('nf-motion')}catch(err){}if(saved===null){paused=e.matches;applyMotion()}});
+function applyMotion(){body.classList.toggle('motion-off',paused);body.classList.toggle('motion-on',!paused);if(paused){identity.style.transform='none';if(frame)cancelAnimationFrame(frame);frame=0}}
+media.addEventListener('change',e=>{paused=e.matches;applyMotion()});
 applyMotion();
 if('IntersectionObserver' in window){root.classList.add('js');const observer=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}},{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))}
 document.querySelector('[data-year]').textContent=new Date().getFullYear();
